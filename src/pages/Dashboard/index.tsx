@@ -61,12 +61,17 @@ const Dashboard: React.FC = () => {
     async function loadFoods(): Promise<void> {
       const { data } = await api.get('/foods', {
         params: {
-          ...(selectedCategory && { category: selectedCategory }),
-          ...(searchValue && { name: searchValue }),
+          ...(selectedCategory && { category_like: selectedCategory }),
+          ...(searchValue && { name_like: searchValue }),
         },
       });
-      Object.assign(data, { formattedPrice: formatValue(data.price) });
-      setFoods(data);
+
+      setFoods(
+        data.map((food: Food) => ({
+          ...food,
+          formattedPrice: formatValue(food.price),
+        })),
+      );
     }
 
     loadFoods();
